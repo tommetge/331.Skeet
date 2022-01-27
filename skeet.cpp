@@ -6,6 +6,12 @@
 #include <string>
 #include <sstream>
 #include "skeet.h"
+#include "level.h"
+#include "bird_spawner.h"
+#include "standard_spawner.h"
+#include "sinker_spawner.h"
+#include "floater_spawner.h"
+#include "crazy_spawner.h"
 using namespace std;
 
 
@@ -361,76 +367,62 @@ int random(int min, int max)
  ************************/
 void Skeet::spawn()
 {
+   Level level;
+
    double size;
    switch (time.level())
    {
       // in level 1 spawn big birds occasionally
       case 1:
+      {
          size = 30.0;
-         // spawns when there is nothing on the screen
-         if (birds.size() == 0 && random(0, 15) == 1)
-            birds.push_back(new Standard(size, 7.0));
-         
-         // spawn every 4 seconds
-         if (random(0, 4 * 30) == 1)
-            birds.push_back(new Standard(size, 7.0));
+         StandardSpawner *standardSpawner = new StandardSpawner(size, 7.0, 7.0, 10);
+         level.addSpawner(standardSpawner);
          break;
+      }
          
       // two kinds of birds in level 2
       case 2:
+      {
          size = 25.0;
-         // spawns when there is nothing on the screen
-         if (birds.size() == 0 && random(0, 15) == 1)
-            birds.push_back(new Standard(size, 7.0, 12));
-
-         // spawn every 4 seconds
-         if (random(0, 4 * 30) == 1)
-            birds.push_back(new Standard(size, 5.0, 12));
-         // spawn every 3 seconds
-         if (random(0, 3 * 30) == 1)
-            birds.push_back(new Sinker(size));
+         StandardSpawner *standardSpawner = new StandardSpawner(size, 5.0, 7.0, 12);
+         SinkerSpawner *sinkerSpawner = new SinkerSpawner(size, 4.5, 20, 3);
+         level.addSpawner(standardSpawner);
+         level.addSpawner(sinkerSpawner);
          break;
+      }
       
       // three kinds of birds in level 3
       case 3:
+      {
          size = 20.0;
-         // spawns when there is nothing on the screen
-         if (birds.size() == 0 && random(0, 15) == 1)
-            birds.push_back(new Standard(size, 5.0, 15));
-
-         // spawn every 4 seconds
-         if (random(0, 4 * 30) == 1)
-            birds.push_back(new Standard(size, 5.0, 15));
-         // spawn every 4 seconds
-         if (random(0, 4 * 30) == 1)
-            birds.push_back(new Sinker(size, 4.0, 22));
-         // spawn every 4 seconds
-         if (random(0, 4 * 30) == 1)
-            birds.push_back(new Floater(size));
+         StandardSpawner *standardSpawner = new StandardSpawner(size, 5.0, 7.0, 12);
+         SinkerSpawner *sinkerSpawner = new SinkerSpawner(size, 4.5, 20, 3);
+         FloaterSpawner *floaterSpawner = new FloaterSpawner(size, 4.5, 20, 3);
+         level.addSpawner(standardSpawner);
+         level.addSpawner(sinkerSpawner);
+         level.addSpawner(floaterSpawner);
          break;
+      }
          
       // three kinds of birds in level 4
       case 4:
+      {
          size = 15.0;
-         // spawns when there is nothing on the screen
-         if (birds.size() == 0 && random(0, 15) == 1)
-            birds.push_back(new Standard(size, 4.0, 18));
-
-         // spawn every 4 seconds
-         if (random(0, 4 * 30) == 1)
-            birds.push_back(new Standard(size, 4.0, 18));
-         // spawn every 4 seconds
-         if (random(0, 4 * 30) == 1)
-            birds.push_back(new Sinker(size, 3.5, 25));
-         // spawn every 4 seconds
-         if (random(0, 4 * 30) == 1)
-            birds.push_back(new Floater(size, 4.0, 25));
-         // spawn every 4 seconds
-         if (random(0, 4 * 30) == 1)
-            birds.push_back(new Crazy(size));
+         StandardSpawner *standardSpawner = new StandardSpawner(size, 4.0, 4.0, 18);
+         SinkerSpawner *sinkerSpawner = new SinkerSpawner(size, 3.5, 25, 4);
+         FloaterSpawner *floaterSpawner = new FloaterSpawner(size, 4.0, 25, 4);
+         CrazySpawner *crazySpawner = new CrazySpawner(size, 4.5, 30, 4);
+         level.addSpawner(standardSpawner);
+         level.addSpawner(sinkerSpawner);
+         level.addSpawner(floaterSpawner);
+         level.addSpawner(crazySpawner);
          break;
+      }
          
       default:
          break;
    }
+
+   level.spawn(&birds);
 }

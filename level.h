@@ -21,6 +21,8 @@
 class Level
 {
 public:
+   ~Level();
+
    // Takes ownership of the spawner pointer. Will be deleted when
    // Level is destructed.
    void addSpawner(BirdSpawner *spawner);

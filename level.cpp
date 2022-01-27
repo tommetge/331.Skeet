@@ -9,6 +9,14 @@
 
 #include "level.h"
 
+Level::~Level()
+{
+    for (BirdSpawner *spawner : list) {
+        delete spawner;
+    }
+    list.clear();
+}
+
 /*********************************************
  * LEVEL
  * Adds a spawner

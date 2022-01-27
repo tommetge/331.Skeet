@@ -21,5 +21,7 @@ static const int SpawnFrequency = 4;
 class BirdSpawner
 {
 public:
+   virtual ~BirdSpawner() = default;
+
    virtual void spawn(std::list<Bird *> *birds) = 0;
 };

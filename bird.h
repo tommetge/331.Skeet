@@ -9,12 +9,13 @@
 
 #pragma once
 #include "point.h"
+#include "killable.h"
 
 /**********************
  * BIRD
  * Everything that can be shot
  **********************/
-class Bird
+class Bird: Killable
 {
 protected:
    static Point dimensions; // size of the screen
@@ -25,12 +26,14 @@ protected:
    int points;                // how many points is this worth?
    
 public:
-   Bird() : dead(false), points(0), radius(1.0) { }
+   Bird(Mediator *mediator)
+      : dead(false), points(0), radius(1.0), Killable(mediator)
+   { }
    
    // setters
    void operator=(const Point    & rhs) { pt = rhs;    }
    void operator=(const Velocity & rhs) { v = rhs;     }
-   void kill()                          { dead = true; }
+   void kill()                          { notifyOfTerm(); }
 
    // getters
    bool isDead()           const { return dead;   }
@@ -42,6 +45,12 @@ public:
    {
       return (pt.getX() < -radius || pt.getX() >= dimensions.getX() + radius ||
               pt.getY() < -radius || pt.getY() >= dimensions.getY() + radius);
+   }
+
+   void notifyOfTerm()
+   {
+      dead = true;
+      mediator->notifyOfTerm();
    }
 
    // special functions
@@ -56,7 +65,7 @@ public:
 class Standard : public Bird
 {
 public:
-    Standard(double radius = 25.0, double speed = 5.0, int points = 10);
+    Standard(Mediator *mediator, double radius = 25.0, double speed = 5.0, int points = 10);
     void draw();
     void advance();
 };
@@ -68,7 +77,7 @@ public:
 class Floater : public Bird
 {
 public:
-    Floater(double radius = 30.0, double speed = 5.0, int points = 15);
+    Floater(Mediator *mediator, double radius = 30.0, double speed = 5.0, int points = 15);
     void draw();
     void advance();
 };
@@ -80,7 +89,7 @@ public:
 class Crazy : public Bird
 {
 public:
-    Crazy(double radius = 30.0, double speed = 4.5, int points = 30);
+    Crazy(Mediator *mediator, double radius = 30.0, double speed = 4.5, int points = 30);
     void draw();
     void advance();
 };
@@ -92,7 +101,7 @@ public:
 class Sinker : public Bird
 {
 public:
-    Sinker(double radius = 30.0, double speed = 4.5, int points = 20);
+    Sinker(Mediator *mediator, double radius = 30.0, double speed = 4.5, int points = 20);
     void draw();
     void advance();
 };

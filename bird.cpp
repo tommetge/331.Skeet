@@ -68,7 +68,7 @@ double randomFloat(double min, double max)
 /******************************************************************
  * STANDARD constructor
  ******************************************************************/
-Standard::Standard(double radius, double speed, int points) : Bird()
+Standard::Standard(Mediator *mediator, double radius, double speed, int points) : Bird(mediator)
 {
    // set the position: standard birds start from the middle
    pt.setY(randomFloat(dimensions.getY() * 0.25, dimensions.getY() * 0.75));
@@ -88,7 +88,7 @@ Standard::Standard(double radius, double speed, int points) : Bird()
 /******************************************************************
  * FLOATER constructor
  ******************************************************************/
-Floater::Floater(double radius, double speed, int points) : Bird()
+Floater::Floater(Mediator *mediator, double radius, double speed, int points) : Bird(mediator)
 {
    // floaters start on the lower part of the screen because they go up with time
    pt.setY(randomFloat(dimensions.getY() * 0.01, dimensions.getY() * 0.5));
@@ -108,7 +108,7 @@ Floater::Floater(double radius, double speed, int points) : Bird()
 /******************************************************************
  * SINKER constructor
  ******************************************************************/
-Sinker::Sinker(double radius, double speed, int points) : Bird()
+Sinker::Sinker(Mediator *mediator, double radius, double speed, int points) : Bird(mediator)
 {
    // sinkers start on the upper part of the screen because they go down with time
    pt.setY(randomFloat(dimensions.getY() * 0.50, dimensions.getY() * 0.95));
@@ -128,7 +128,7 @@ Sinker::Sinker(double radius, double speed, int points) : Bird()
 /******************************************************************
  * CRAZY constructor
  ******************************************************************/
-Crazy::Crazy(double radius, double speed, int points) : Bird()
+Crazy::Crazy(Mediator *mediator, double radius, double speed, int points) : Bird(mediator)
 {
    // crazy birds start in the middle and can go any which way
    pt.setY(randomFloat(dimensions.getY() * 0.25, dimensions.getY() * 0.75));

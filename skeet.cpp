@@ -73,30 +73,10 @@ void Skeet::animate()
          {
             for (int i = 0; i < 25; i++)
                effects.push_back(new Fragment(bullet->getPosition(), bullet->getVelocity()));
-            element->kill();
-            bullet->kill();
+            element->notifyOfTerm();
+            bullet->notifyOfTerm();
             hitRatio.adjust(1);
          }
-   
-   // remove the zombie birds
-   for (auto it = birds.begin(); it != birds.end();)
-      if ((*it)->isDead())
-      {
-         score.adjust((*it)->getPoints());
-         it = birds.erase(it);
-      }
-      else
-         ++it;
-       
-   // remove zombie bullets
-   for (auto it = bullets.begin(); it != bullets.end(); )
-      if ((*it)->isDead())
-      {
-         (*it)->death(bullets);
-         it = bullets.erase(it);
-      }
-      else
-         ++it;
    
    // remove zombie fragments
    for (auto it = effects.begin(); it != effects.end();)
@@ -104,6 +84,63 @@ void Skeet::animate()
          it = effects.erase(it);
       else
          ++it;
+
+   removeZombies();
+}
+
+void Skeet::removeZombies()
+{
+   for (auto zit = z_birds.begin(); zit != z_birds.end();)
+   {
+      // remove the zombie birds
+      for (auto it = birds.begin(); it != birds.end();)
+         if (*it == *zit) {
+            it = birds.erase(it);
+         }
+         else
+            ++it;
+      ++zit;
+   }
+
+   for (auto zit = z_bullets.begin(); zit != z_bullets.end();)  
+   {  
+      // remove zombie bullets
+      for (auto it = bullets.begin(); it != bullets.end(); )
+         if (*it == *zit) {
+            it = bullets.erase(it);
+         }
+         else
+            ++it;
+      ++zit;
+   }
+
+   z_birds.clear();
+   z_bullets.clear();
+}
+
+void Skeet::notifyOfTerm()
+{
+   // remove the zombie birds
+   for (auto it = birds.begin(); it != birds.end();)
+   {
+      if ((*it)->isDead())
+      {
+         score.adjust((*it)->getPoints());
+         z_birds.push_back(*it);
+      }
+      ++it;
+   }
+       
+   // remove zombie bullets
+   for (auto it = bullets.begin(); it != bullets.end(); )
+   {
+      if ((*it)->isDead())
+      {
+         (*it)->death(bullets);
+         z_bullets.push_back(*it);
+      }
+      ++it;
+   }
 }
 
 /************************************************************************
@@ -319,13 +356,13 @@ void Skeet::interact(const UserInput & ui)
 
    // a pellet can be shot at any time
    if (ui.isSpace())
-      p = new Pellet(gun.getAngle());
+      p = new Pellet(this, gun.getAngle());
    // missiles can be shot at level 2 and higher
    else if (ui.isM() && time.level() > 1)
-      p = new Missile(gun.getAngle());
+      p = new Missile(this, gun.getAngle());
    // bombs can be shot at level 3 and higher
    else if (ui.isB() && time.level() > 2)
-      p = new Bomb(gun.getAngle());
+      p = new Bomb(this, gun.getAngle());
    
    // add something if something has been added
    if (nullptr != p)
@@ -369,11 +406,11 @@ void Skeet::spawn()
          size = 30.0;
          // spawns when there is nothing on the screen
          if (birds.size() == 0 && random(0, 15) == 1)
-            birds.push_back(new Standard(size, 7.0));
+            birds.push_back(new Standard(this, size, 7.0));
          
          // spawn every 4 seconds
          if (random(0, 4 * 30) == 1)
-            birds.push_back(new Standard(size, 7.0));
+            birds.push_back(new Standard(this, size, 7.0));
          break;
          
       // two kinds of birds in level 2
@@ -381,14 +418,14 @@ void Skeet::spawn()
          size = 25.0;
          // spawns when there is nothing on the screen
          if (birds.size() == 0 && random(0, 15) == 1)
-            birds.push_back(new Standard(size, 7.0, 12));
+            birds.push_back(new Standard(this, size, 7.0, 12));
 
          // spawn every 4 seconds
          if (random(0, 4 * 30) == 1)
-            birds.push_back(new Standard(size, 5.0, 12));
+            birds.push_back(new Standard(this, size, 5.0, 12));
          // spawn every 3 seconds
          if (random(0, 3 * 30) == 1)
-            birds.push_back(new Sinker(size));
+            birds.push_back(new Sinker(this, size));
          break;
       
       // three kinds of birds in level 3
@@ -396,17 +433,17 @@ void Skeet::spawn()
          size = 20.0;
          // spawns when there is nothing on the screen
          if (birds.size() == 0 && random(0, 15) == 1)
-            birds.push_back(new Standard(size, 5.0, 15));
+            birds.push_back(new Standard(this, size, 5.0, 15));
 
          // spawn every 4 seconds
          if (random(0, 4 * 30) == 1)
-            birds.push_back(new Standard(size, 5.0, 15));
+            birds.push_back(new Standard(this, size, 5.0, 15));
          // spawn every 4 seconds
          if (random(0, 4 * 30) == 1)
-            birds.push_back(new Sinker(size, 4.0, 22));
+            birds.push_back(new Sinker(this, size, 4.0, 22));
          // spawn every 4 seconds
          if (random(0, 4 * 30) == 1)
-            birds.push_back(new Floater(size));
+            birds.push_back(new Floater(this, size));
          break;
          
       // three kinds of birds in level 4
@@ -414,20 +451,20 @@ void Skeet::spawn()
          size = 15.0;
          // spawns when there is nothing on the screen
          if (birds.size() == 0 && random(0, 15) == 1)
-            birds.push_back(new Standard(size, 4.0, 18));
+            birds.push_back(new Standard(this, size, 4.0, 18));
 
          // spawn every 4 seconds
          if (random(0, 4 * 30) == 1)
-            birds.push_back(new Standard(size, 4.0, 18));
+            birds.push_back(new Standard(this, size, 4.0, 18));
          // spawn every 4 seconds
          if (random(0, 4 * 30) == 1)
-            birds.push_back(new Sinker(size, 3.5, 25));
+            birds.push_back(new Sinker(this, size, 3.5, 25));
          // spawn every 4 seconds
          if (random(0, 4 * 30) == 1)
-            birds.push_back(new Floater(size, 4.0, 25));
+            birds.push_back(new Floater(this, size, 4.0, 25));
          // spawn every 4 seconds
          if (random(0, 4 * 30) == 1)
-            birds.push_back(new Crazy(size));
+            birds.push_back(new Crazy(this, size));
          break;
          
       default:

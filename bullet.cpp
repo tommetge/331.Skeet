@@ -34,8 +34,8 @@
 /*********************************************
  * BULLET constructor
  *********************************************/
-Bullet::Bullet(double angle, double speed, double radius, int value) :
-   dead(false), radius(radius), value(value)
+Bullet::Bullet(Mediator *mediator, double angle, double speed, double radius, int value) :
+   dead(false), radius(radius), value(value), Killable(mediator)
 {
    // set the initial position
    pt.setX(dimensions.getX() - 1.0);
@@ -56,7 +56,7 @@ Bullet::Bullet(double angle, double speed, double radius, int value) :
 void Bomb::death(std::list<Bullet*>& bullets)
 {
    for (int i = 0; i < 20; i++)
-      bullets.push_back(new Shrapnel(*this));
+      bullets.push_back(new Shrapnel(getMediator(), *this));
 }
 
  /***************************************************************/

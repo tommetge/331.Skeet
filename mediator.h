@@ -14,5 +14,6 @@
  **********************/
 class Mediator
 {
-
+public:
+    virtual void notifyOfTerm() {}
 };

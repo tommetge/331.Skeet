@@ -17,6 +17,7 @@
 #include "gun.h"
 #include "time.h"
 #include "score.h"
+#include "mediator.h"
 
 #include <list>
 
@@ -24,7 +25,7 @@
  * Skeet
  * The game class
  *************************************************************************/
-class Skeet
+class Skeet: Mediator
 {
 public:
     Skeet(Point & dimensions) : dimensions(dimensions),
@@ -36,12 +37,16 @@ public:
     // move the gameplay by one unit of time
     void animate();
 
+    void removeZombies();
+
     // output everything on the screen
     void drawLevel()  const;    // output the game
     void drawStatus() const;    // output the status information
 
     // is the game currently playing right now?
     bool isPlaying() const { return time.isPlaying();  }
+
+    void notifyOfTerm();
 private:
     // generate new birds
     void spawn();                  
@@ -54,6 +59,8 @@ private:
     std::list<Bird*> birds;        // all the shootable birds
     std::list<Bullet*> bullets;    // the bullets
     std::list<Effect*> effects;    // the fragments of a dead bird.
+    std::list<Bird*> z_birds;      // Zombies
+    std::list<Bullet*> z_bullets;  // Zombies
     Time time;                     // how many frames have transpired since the beginning
     Score score;                   // the player's score
     HitRatio hitRatio;               // the hit ratio for the birds

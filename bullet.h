@@ -10,6 +10,7 @@
 #pragma once
 #include "point.h"
 #include "effect.h"
+#include "killable.h"
 #include <list>
 #include <cassert>
 
@@ -17,7 +18,7 @@
  * BULLET
  * Something to shoot something else
  *********************************************/
-class Bullet
+class Bullet: Killable
 {
 protected:
    static Point dimensions;   // size of the screen
@@ -28,10 +29,10 @@ protected:
    int value;                 // how many points does this cost?
     
 public:
-   Bullet(double angle = 0.0, double speed = 30.0, double radius = 5.0, int value = 1);
+   Bullet(Mediator *mediator, double angle = 0.0, double speed = 30.0, double radius = 5.0, int value = 1);
    
    // setters
-   void kill()                   { dead = true; }
+   void kill()                   { notifyOfTerm(); }
 
    // getters
    bool isDead()           const { return dead;   }
@@ -39,6 +40,14 @@ public:
    Velocity getVelocity()  const { return v;      }
    double getRadius()      const { return radius; }
    int getValue()          const { return value;  }
+
+   void notifyOfTerm()
+   {
+      dead = true;
+      mediator->notifyOfTerm();
+   }
+
+   Mediator *getMediator() { return mediator; }
 
    // special functions
    virtual void death(std::list<Bullet *> & bullets) {}
@@ -68,7 +77,7 @@ protected:
 class Pellet : public Bullet
 {
 public:
-   Pellet(double angle, double speed = 15.0) : Bullet(angle, speed, 1.0, 1) {}
+   Pellet(Mediator *mediator, double angle, double speed = 15.0) : Bullet(mediator, angle, speed, 1.0, 1) {}
    
    void output();
 };
@@ -82,7 +91,7 @@ class Bomb : public Bullet
 private:
    int timeToDie;
 public:
-   Bomb(double angle, double speed = 10.0) : Bullet(angle, speed, 4.0, 4), timeToDie(60) {}
+   Bomb(Mediator *mediator, double angle, double speed = 10.0) : Bullet(mediator, angle, speed, 4.0, 4), timeToDie(60) {}
    
    void output();
    void move(std::list<Effect*> & effects);
@@ -98,7 +107,7 @@ class Shrapnel : public Bullet
 private:
    int timeToDie;
 public:
-   Shrapnel(const Bomb & bomb)
+   Shrapnel(Mediator *mediator, const Bomb & bomb) : Bullet(mediator)
    {
       // how long will this one live?
       timeToDie = random(5, 15);
@@ -122,7 +131,7 @@ public:
 class Missile : public Bullet
 {
 public:
-   Missile(double angle, double speed = 10.0) : Bullet(angle, speed, 1.0, 3) {}
+   Missile(Mediator *mediator, double angle, double speed = 10.0) : Bullet(mediator, angle, speed, 1.0, 3) {}
    
    void output();
    void input(bool isUp, bool isDown, bool isB)

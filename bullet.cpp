@@ -76,7 +76,7 @@ void Bullet::move(std::list<Effect*> & effects)
 
    // out of bounds checker
    if (isOutOfBounds())
-      kill();
+      handleTermination();
 }
 
 /*********************************************
@@ -88,7 +88,7 @@ void Bomb::move(std::list<Effect*> & effects)
     // kill if it has been around too long
     timeToDie--;
     if (!timeToDie)
-        kill();
+        handleTermination();
 
     // do the inertia thing
     Bullet::move(effects);
@@ -116,7 +116,7 @@ void Shrapnel::move(std::list<Effect*> & effects)
     // kill if it has been around too long
     timeToDie--;
     if (!timeToDie)
-        kill();
+        handleTermination();
 
     // add a streek
     effects.push_back(new Streek(pt, v));

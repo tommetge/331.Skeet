@@ -17,6 +17,7 @@
 #include "gun.h"
 #include "time.h"
 #include "score.h"
+#include "termination_handler.h"
 
 #include <list>
 
@@ -24,7 +25,7 @@
  * Skeet
  * The game class
  *************************************************************************/
-class Skeet
+class Skeet: public TerminationHandler
 {
 public:
     Skeet(Point & dimensions) : dimensions(dimensions),
@@ -42,6 +43,8 @@ public:
 
     // is the game currently playing right now?
     bool isPlaying() const { return time.isPlaying();  }
+
+    void handleTermination() {}
 private:
     // generate new birds
     void spawn();                  
@@ -54,6 +57,8 @@ private:
     std::list<Bird*> birds;        // all the shootable birds
     std::list<Bullet*> bullets;    // the bullets
     std::list<Effect*> effects;    // the fragments of a dead bird.
+    std::list<TerminationHandler *> bird_handlers;
+    std::list<TerminationHandler *> bullet_handlers;
     Time time;                     // how many frames have transpired since the beginning
     Score score;                   // the player's score
     HitRatio hitRatio;               // the hit ratio for the birds

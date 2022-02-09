@@ -14,5 +14,6 @@
  **********************/
 class TerminationHandler
 {
-
+public:
+    virtual void handleTermination() {}
 };

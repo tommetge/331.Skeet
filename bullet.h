@@ -10,6 +10,7 @@
 #pragma once
 #include "point.h"
 #include "effect.h"
+#include "termination_handler.h"
 #include <list>
 #include <cassert>
 
@@ -17,7 +18,7 @@
  * BULLET
  * Something to shoot something else
  *********************************************/
-class Bullet
+class Bullet: public TerminationHandler
 {
 protected:
    static Point dimensions;   // size of the screen
@@ -31,7 +32,7 @@ public:
    Bullet(double angle = 0.0, double speed = 30.0, double radius = 5.0, int value = 1);
    
    // setters
-   void kill()                   { dead = true; }
+   void handleTermination()      { dead = true; }
 
    // getters
    bool isDead()           const { return dead;   }

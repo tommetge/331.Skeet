@@ -73,10 +73,19 @@ void Skeet::animate()
          {
             for (int i = 0; i < 25; i++)
                effects.push_back(new Fragment(bullet->getPosition(), bullet->getVelocity()));
-            element->kill();
-            bullet->kill();
+            bird_handlers.push_back(element);
+            bullet_handlers.push_back(bullet);
             hitRatio.adjust(1);
          }
+
+   for (auto handler: bird_handlers) {
+      handler->handleTermination();
+   }
+   bird_handlers.clear();
+   for (auto handler: bullet_handlers) {
+      handler->handleTermination();
+   }
+   bullet_handlers.clear();
    
    // remove the zombie birds
    for (auto it = birds.begin(); it != birds.end();)

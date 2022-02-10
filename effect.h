@@ -9,11 +9,12 @@
 
 #pragma once
 #include "point.h"
+#include "element.h"
 
 /**********************
  * Effect: stuff that is not interactive
  **********************/
-class Effect
+class Effect: public ExpirableElement
 {
 protected:
     Point pt;      // location of the effect
@@ -30,6 +31,11 @@ public:
     
     // it is dead when age goes to 0.0
     bool isDead() const { return age <= 0.0; }
+
+    // Element
+   void accept(Visitor *visitor) {
+      visitor->visit(this);
+   }
 };
 
 /**********************

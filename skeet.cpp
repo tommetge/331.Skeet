@@ -77,33 +77,70 @@ void Skeet::animate()
             bullet->kill();
             hitRatio.adjust(1);
          }
-   
-   // remove the zombie birds
-   for (auto it = birds.begin(); it != birds.end();)
-      if ((*it)->isDead())
+
+   // Visit all terminal / expirable elements
+   for (auto bird: birds)
+      bird->accept(this);
+
+   for (auto bullet: bullets)
+      bullet->accept(this);
+
+   for (auto effect: effects)
+      effect->accept(this);
+
+   // Remove zombies
+   removeZombies();
+}
+
+void Skeet::removeZombies()
+{
+   for (auto zombie: zombies)
+   {
+      // remove the zombie birds
+      for (auto it = birds.begin(); it != birds.end();)
       {
-         score.adjust((*it)->getPoints());
-         it = birds.erase(it);
+         if (*it == zombie) {
+            score.adjust((*it)->getPoints());
+            it = birds.erase(it);
+         } else {
+            ++it;
+         }
       }
-      else
-         ++it;
-       
-   // remove zombie bullets
-   for (auto it = bullets.begin(); it != bullets.end(); )
-      if ((*it)->isDead())
+
+      // remove zombie bullets
+      for (auto it = bullets.begin(); it != bullets.end();)
       {
-         (*it)->death(bullets);
-         it = bullets.erase(it);
+         if (*it == zombie) {
+            it = bullets.erase(it);
+         } else {
+            ++it;
+         }
       }
-      else
-         ++it;
-   
-   // remove zombie fragments
-   for (auto it = effects.begin(); it != effects.end();)
-      if ((*it)->isDead())
-         it = effects.erase(it);
-      else
-         ++it;
+
+      // remove zombie fragments
+      for (auto it = effects.begin(); it != effects.end();)
+      {
+         if (*it == zombie) {
+            it = effects.erase(it);
+         } else {
+            ++it;
+         }
+      }
+   }
+
+   zombies.clear();
+}
+
+void Skeet::visit(TerminalElement *element)
+{
+   if (element->isDead())
+      zombies.push_back(element);
+}
+
+void Skeet::visit(ExpirableElement *element)
+{
+   if (element->isDead())
+      zombies.push_back(element);
 }
 
 /************************************************************************

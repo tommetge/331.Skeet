@@ -9,12 +9,13 @@
 
 #pragma once
 #include "point.h"
+#include "element.h"
 
 /**********************
  * BIRD
  * Everything that can be shot
  **********************/
-class Bird
+class Bird: public TerminalElement
 {
 protected:
    static Point dimensions; // size of the screen
@@ -47,6 +48,11 @@ public:
    // special functions
    virtual void draw() = 0;
    virtual void advance() = 0;
+
+   // Element
+   void accept(Visitor *visitor) {
+      visitor->visit(this);
+   }
 };
 
 /*********************************************

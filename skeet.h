@@ -11,6 +11,8 @@
 
 #include "point.h"
 #include "uiInteract.h"
+#include "visitor.h"
+#include "element.h"
 #include "bird.h"
 #include "bullet.h"
 #include "effect.h"
@@ -24,7 +26,7 @@
  * Skeet
  * The game class
  *************************************************************************/
-class Skeet
+class Skeet: Visitor
 {
 public:
     Skeet(Point & dimensions) : dimensions(dimensions),
@@ -42,6 +44,10 @@ public:
 
     // is the game currently playing right now?
     bool isPlaying() const { return time.isPlaying();  }
+
+    // Visitor
+    void visit(TerminalElement *element);
+    void visit(ExpirableElement *element);
 private:
     // generate new birds
     void spawn();                  
@@ -49,11 +55,13 @@ private:
     void drawTimer(double percent,
                    double redFore, double greenFore, double blueFore,
                    double redBack, double greenBack, double blueBack) const;
+    void removeZombies();
     
     Gun gun;                       // the gun
     std::list<Bird*> birds;        // all the shootable birds
     std::list<Bullet*> bullets;    // the bullets
     std::list<Effect*> effects;    // the fragments of a dead bird.
+    std::list<Element *> zombies;  // zombies to remove
     Time time;                     // how many frames have transpired since the beginning
     Score score;                   // the player's score
     HitRatio hitRatio;               // the hit ratio for the birds

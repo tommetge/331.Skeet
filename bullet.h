@@ -10,6 +10,7 @@
 #pragma once
 #include "point.h"
 #include "effect.h"
+#include "element.h"
 #include <list>
 #include <cassert>
 
@@ -17,7 +18,7 @@
  * BULLET
  * Something to shoot something else
  *********************************************/
-class Bullet
+class Bullet: public TerminalElement
 {
 protected:
    static Point dimensions;   // size of the screen
@@ -45,6 +46,11 @@ public:
    virtual void output() = 0;
    virtual void input(bool isUp, bool isDown, bool isB) {}
    virtual void move(std::list<Effect*> &effects);
+
+   // Element
+   void accept(Visitor *visitor) {
+      visitor->visit(this);
+   }
 
 protected:
    bool isOutOfBounds() const

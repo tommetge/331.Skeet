@@ -17,6 +17,7 @@
 #include "gun.h"
 #include "time.h"
 #include "score.h"
+#include "observer.h"
 
 #include <list>
 
@@ -24,7 +25,7 @@
  * Skeet
  * The game class
  *************************************************************************/
-class Skeet
+class Skeet: public Observer
 {
 public:
     Skeet(Point & dimensions) : dimensions(dimensions),
@@ -42,6 +43,8 @@ public:
 
     // is the game currently playing right now?
     bool isPlaying() const { return time.isPlaying();  }
+
+    void notify(Message message, Observable *obj);
 private:
     // generate new birds
     void spawn();                  
@@ -49,11 +52,13 @@ private:
     void drawTimer(double percent,
                    double redFore, double greenFore, double blueFore,
                    double redBack, double greenBack, double blueBack) const;
+    void removeZombies();
     
     Gun gun;                       // the gun
     std::list<Bird*> birds;        // all the shootable birds
     std::list<Bullet*> bullets;    // the bullets
     std::list<Effect*> effects;    // the fragments of a dead bird.
+    std::list<Observable *> zombies;
     Time time;                     // how many frames have transpired since the beginning
     Score score;                   // the player's score
     HitRatio hitRatio;               // the hit ratio for the birds

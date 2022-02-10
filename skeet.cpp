@@ -57,9 +57,13 @@ void Skeet::animate()
    {
       element->advance();
       hitRatio.adjust(element->isDead() ? -1 : 0);
+      element->subscribe(this);
    }
    for (auto bullet : bullets)
+   {
       bullet->move(effects);
+      bullet->subscribe(this);
+   }
    for (auto effect : effects)
       effect->fly();
       
@@ -77,26 +81,8 @@ void Skeet::animate()
             bullet->kill();
             hitRatio.adjust(1);
          }
-   
-   // remove the zombie birds
-   for (auto it = birds.begin(); it != birds.end();)
-      if ((*it)->isDead())
-      {
-         score.adjust((*it)->getPoints());
-         it = birds.erase(it);
-      }
-      else
-         ++it;
-       
-   // remove zombie bullets
-   for (auto it = bullets.begin(); it != bullets.end(); )
-      if ((*it)->isDead())
-      {
-         (*it)->death(bullets);
-         it = bullets.erase(it);
-      }
-      else
-         ++it;
+
+   removeZombies();
    
    // remove zombie fragments
    for (auto it = effects.begin(); it != effects.end();)
@@ -104,6 +90,40 @@ void Skeet::animate()
          it = effects.erase(it);
       else
          ++it;
+}
+
+void Skeet::removeZombies()
+{
+   for (auto zombie: zombies) {
+      // remove the zombie birds
+      for (auto it = birds.begin(); it != birds.end();)
+         if (*it == zombie)
+         {
+            score.adjust((*it)->getPoints());
+            it = birds.erase(it);
+         }
+         else
+            ++it;
+          
+      // remove zombie bullets
+      for (auto it = bullets.begin(); it != bullets.end(); )
+         if (*it == zombie)
+         {
+            (*it)->death(bullets);
+            it = bullets.erase(it);
+         }
+         else
+            ++it;
+   }
+
+   zombies.clear();
+}
+
+void Skeet::notify(Message message, Observable *obj)
+{
+   if (message == ObservableIsDead) {
+      zombies.push_back(obj);
+   }
 }
 
 /************************************************************************

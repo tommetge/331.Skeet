@@ -12,12 +12,13 @@
 #include "effect.h"
 #include <list>
 #include <cassert>
+#include "observer.h"
 
 /*********************************************
  * BULLET
  * Something to shoot something else
  *********************************************/
-class Bullet
+class Bullet: public Observable
 {
 protected:
    static Point dimensions;   // size of the screen
@@ -31,7 +32,7 @@ public:
    Bullet(double angle = 0.0, double speed = 30.0, double radius = 5.0, int value = 1);
    
    // setters
-   void kill()                   { dead = true; }
+   void kill()                   { dead = true; notify(ObservableIsDead); }
 
    // getters
    bool isDead()           const { return dead;   }

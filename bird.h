@@ -9,12 +9,13 @@
 
 #pragma once
 #include "point.h"
+#include "observer.h"
 
 /**********************
  * BIRD
  * Everything that can be shot
  **********************/
-class Bird
+class Bird: public Observable
 {
 protected:
    static Point dimensions; // size of the screen
@@ -30,7 +31,7 @@ public:
    // setters
    void operator=(const Point    & rhs) { pt = rhs;    }
    void operator=(const Velocity & rhs) { v = rhs;     }
-   void kill()                          { dead = true; }
+   void kill()                          { dead = true; notify(ObservableIsDead); }
 
    // getters
    bool isDead()           const { return dead;   }

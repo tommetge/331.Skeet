@@ -17,7 +17,6 @@
 #include "gun.h"
 #include "time.h"
 #include "score.h"
-#include "termination_handler.h"
 
 #include <list>
 
@@ -25,7 +24,7 @@
  * Skeet
  * The game class
  *************************************************************************/
-class Skeet: public TerminationHandler
+class Skeet
 {
 public:
     Skeet(Point & dimensions) : dimensions(dimensions),
@@ -43,8 +42,6 @@ public:
 
     // is the game currently playing right now?
     bool isPlaying() const { return time.isPlaying();  }
-
-    void handleTermination() {}
 private:
     // generate new birds
     void spawn();                  

@@ -10,6 +10,7 @@
 #pragma once
 
 #include "time_logic.h"
+#include "time_storage.h"
 
 /************************
  * TIME
@@ -18,7 +19,9 @@
 class Time
 {
 public:
-    Time() { reset(); }
+    Time(TimeStorage *storage)
+        : logic(storage)
+    { reset(); }
     
     // which level are we in?
     int level() const  { return logic.level(); }

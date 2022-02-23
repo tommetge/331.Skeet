@@ -25,8 +25,12 @@
 class TimeLogic
 {
 public:
+    TimeLogic(TimeStorage *storage)
+        : storage(storage)
+    { }
+
     // which level are we in?
-    int level() const  { return storage.levelNumber; }
+    int level() const  { return storage->levelNumber; }
     
     // are we currently playing in a level?
     bool isPlaying() const;
@@ -35,7 +39,7 @@ public:
     bool isStatus() const { return !isPlaying(); }
     
     // has the game ended?
-    bool isGameOver() const { return storage.levelNumber == 0; }
+    bool isGameOver() const { return storage->levelNumber == 0; }
     
     // is this the very start of the playing time of the leve
     bool isStartLevel() const;
@@ -54,13 +58,13 @@ public:
 
 private:
     // Time Storage
-    TimeStorage storage;
+    TimeStorage *storage;
 
     // how long have we been in the level in seconds?
     int secondsInLevel() const
     {
-        assert(storage.levelNumber < (int)storage.levelLength.size());
-        return storage.levelLength[storage.levelNumber] - secondsFromFrames(storage.framesLeft);
+        assert(storage->levelNumber < (int)storage->levelLength.size());
+        return storage->levelLength[storage->levelNumber] - secondsFromFrames(storage->framesLeft);
     }
     
     // seconds from frames

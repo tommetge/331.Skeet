@@ -26,7 +26,7 @@ bool TimeLogic::isPlaying() const
 bool TimeLogic::isStartLevel() const
 {
     if (isPlaying())
-        return storage.framesLeft == FRAMES_PER_SECOND * (storage.levelLength[storage.levelNumber] - (int)SECONDS_STATUS) - 1;
+        return storage->framesLeft == FRAMES_PER_SECOND * (storage->levelLength[storage->levelNumber] - (int)SECONDS_STATUS) - 1;
     else
         return false;
 }
@@ -37,11 +37,11 @@ bool TimeLogic::isStartLevel() const
  ************************/
 int TimeLogic::secondsLeft() const
 {
-    assert(storage.levelNumber >= 0 && storage.levelNumber < (int)storage.levelLength.size());
+    assert(storage->levelNumber >= 0 && storage->levelNumber < (int)storage->levelLength.size());
     if (isStatus())
-        return secondsFromFrames(storage.framesLeft) - storage.levelLength[storage.levelNumber] + (int)SECONDS_STATUS + 1;
+        return secondsFromFrames(storage->framesLeft) - storage->levelLength[storage->levelNumber] + (int)SECONDS_STATUS + 1;
     else
-        return secondsFromFrames(storage.framesLeft) + 1;
+        return secondsFromFrames(storage->framesLeft) + 1;
 }
 
 /************************
@@ -50,23 +50,23 @@ int TimeLogic::secondsLeft() const
  ************************/
 double TimeLogic::percentLeft() const
 {
-    assert(storage.levelNumber >= 0 && storage.levelNumber < (int)storage.levelLength.size());
+    assert(storage->levelNumber >= 0 && storage->levelNumber < (int)storage->levelLength.size());
     double framesInStatus = SECONDS_STATUS * FRAMES_PER_SECOND;
-    double framesInPlaying = (storage.levelLength[storage.levelNumber] - SECONDS_STATUS) * FRAMES_PER_SECOND;
+    double framesInPlaying = (storage->levelLength[storage->levelNumber] - SECONDS_STATUS) * FRAMES_PER_SECOND;
     
     if (isStatus())
     {
-        assert(storage.framesLeft - framesInPlaying <= framesInStatus);
-        assert(storage.framesLeft - framesInPlaying >= 0);
+        assert(storage->framesLeft - framesInPlaying <= framesInStatus);
+        assert(storage->framesLeft - framesInPlaying >= 0);
         assert(framesInStatus > 0);
-        return (double)(storage.framesLeft - framesInPlaying) / (double)framesInStatus;
+        return (double)(storage->framesLeft - framesInPlaying) / (double)framesInStatus;
     }
     else
     {
-        assert(storage.framesLeft - framesInStatus <= framesInPlaying);
-        assert(storage.framesLeft - framesInStatus >= 0);
+        assert(storage->framesLeft - framesInStatus <= framesInPlaying);
+        assert(storage->framesLeft - framesInStatus >= 0);
         assert(framesInPlaying > 0);
-        return (double)(storage.framesLeft - framesInStatus) / (double)framesInPlaying;
+        return (double)(storage->framesLeft - framesInStatus) / (double)framesInPlaying;
     }
 }
 
@@ -76,27 +76,27 @@ double TimeLogic::percentLeft() const
  ************************/
 void TimeLogic::operator++(int postfix)
 {
-    assert(storage.levelNumber >= 0 && storage.levelNumber < (int)storage.levelLength.size());
+    assert(storage->levelNumber >= 0 && storage->levelNumber < (int)storage->levelLength.size());
     
     // do nothing in the game over scenario
-    if (storage.levelNumber == 0)
+    if (storage->levelNumber == 0)
         return;
     
     // standard move withing a level
-    if (storage.framesLeft >= 1)
-        storage.framesLeft--;
+    if (storage->framesLeft >= 1)
+        storage->framesLeft--;
     
     // changing the level
     else
     {
         // move the level or...
-        storage.levelNumber++;
-        if (storage.levelNumber < (int)storage.levelLength.size())
-            storage.framesLeft = FRAMES_PER_SECOND * storage.levelLength[storage.levelNumber];
+        storage->levelNumber++;
+        if (storage->levelNumber < (int)storage->levelLength.size())
+            storage->framesLeft = FRAMES_PER_SECOND * storage->levelLength[storage->levelNumber];
         
         // game over!
         else
-            storage.levelNumber = 0;
+            storage->levelNumber = 0;
     }
 }
 
@@ -107,7 +107,7 @@ void TimeLogic::operator++(int postfix)
 void TimeLogic::reset()
 {
     // first level is 30 seconds in length, the first 5 are the status time
-    storage.levelLength = {0, 30, 30, 45, 45};
-    storage.levelNumber = 1;
-    storage.framesLeft = FRAMES_PER_SECOND * storage.levelLength[storage.levelNumber];
+    storage->levelLength = {0, 30, 30, 45, 45};
+    storage->levelNumber = 1;
+    storage->framesLeft = FRAMES_PER_SECOND * storage->levelLength[storage->levelNumber];
 }

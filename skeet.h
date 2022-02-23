@@ -28,7 +28,7 @@ class Skeet
 {
 public:
     Skeet(Point & dimensions) : dimensions(dimensions),
-        gun(Point(800.0, 0.0)), time(), score(), hitRatio() {}
+        gun(Point(800.0, 0.0)), time(&storage), score(), hitRatio() {}
 
     // handle all user input
     void interact(const UserInput& ui);
@@ -54,6 +54,7 @@ private:
     std::list<Bird*> birds;        // all the shootable birds
     std::list<Bullet*> bullets;    // the bullets
     std::list<Effect*> effects;    // the fragments of a dead bird.
+    TimeStorage storage;
     Time time;                     // how many frames have transpired since the beginning
     Score score;                   // the player's score
     HitRatio hitRatio;               // the hit ratio for the birds

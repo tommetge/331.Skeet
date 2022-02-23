@@ -13,6 +13,8 @@
 #include <string>
 #include <cassert>
 
+class Time;
+
 /************************
  * TIME
  * Time's storage.
@@ -20,6 +22,10 @@
 class TimeStorage
 {
 public:
+    TimeStorage(Time *time)
+        : time(time)
+    { }
+
     // number of frames left in this level
     int framesLeft;
     
@@ -28,4 +34,7 @@ public:
     
     // length in seconds of each level
     std::array<int, 5> levelLength;
+
+private:
+    Time *time;
 };

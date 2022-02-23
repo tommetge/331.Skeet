@@ -1,15 +1,15 @@
 /***********************************************************************
  * Header File:
- *    TIME LOGIC
+ *    TIME CONTROLLER
  * Author:
  *    Br. Helfrich
  * Summary:
- *    The logical (think Mr. Spock) side of Time.
+ *    The controlling (think Q) side of Time.
  ************************************************************************/
 
 #pragma once
 
-#include "time_storage.h"
+#include "time_model.h"
 
 #include <array>
 #include <string>
@@ -24,15 +24,15 @@ class Time;
  * TIME LOGIC
  * Time's logic.
  ************************/
-class TimeLogic
+class TimeController
 {
 public:
-    TimeLogic(Time *time)
-        : storage(time)
+    TimeController(Time *time)
+        : model(time)
     { }
 
     // which level are we in?
-    int level() const  { return storage.levelNumber; }
+    int level() const  { return model.levelNumber; }
     
     // are we currently playing in a level?
     bool isPlaying() const;
@@ -41,7 +41,7 @@ public:
     bool isStatus() const { return !isPlaying(); }
     
     // has the game ended?
-    bool isGameOver() const { return storage.levelNumber == 0; }
+    bool isGameOver() const { return model.levelNumber == 0; }
     
     // is this the very start of the playing time of the leve
     bool isStartLevel() const;
@@ -59,14 +59,15 @@ public:
     void reset();
 
 private:
-    // Time Storage
-    TimeStorage storage;
+    // Time model
+    TimeModel model;
+    Time *view;
 
     // how long have we been in the level in seconds?
     int secondsInLevel() const
     {
-        assert(storage.levelNumber < (int)storage.levelLength.size());
-        return storage.levelLength[storage.levelNumber] - secondsFromFrames(storage.framesLeft);
+        assert(model.levelNumber < (int)model.levelLength.size());
+        return model.levelLength[model.levelNumber] - secondsFromFrames(model.framesLeft);
     }
     
     // seconds from frames

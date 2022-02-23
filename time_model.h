@@ -1,10 +1,10 @@
 /***********************************************************************
  * Header File:
- *    TIME STORAGE
+ *    TIME MODEL
  * Author:
  *    Br. Helfrich
  * Summary:
- *    The storage side of Time.
+ *    The model side of Time.
  ************************************************************************/
 
 #pragma once
@@ -17,13 +17,13 @@ class Time;
 
 /************************
  * TIME
- * Time's storage.
+ * Time's model.
  ************************/
-class TimeStorage
+class TimeModel
 {
 public:
-    TimeStorage(Time *time)
-        : time(time)
+    TimeModel(Time *view)
+        : view(view)
     { }
 
     // number of frames left in this level
@@ -36,5 +36,5 @@ public:
     std::array<int, 5> levelLength;
 
 private:
-    Time *time;
+    Time *view;
 };

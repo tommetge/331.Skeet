@@ -8,11 +8,8 @@
  ************************************************************************/
 
 #pragma once
-#include <array>
-#include <string>
-#include <cassert>
 
-#define FRAMES_PER_SECOND 30
+#include "time_logic.h"
 
 /************************
  * TIME
@@ -24,57 +21,38 @@ public:
     Time() { reset(); }
     
     // which level are we in?
-    int level() const  { return levelNumber; }
+    int level() const  { return logic.level(); }
     
     // are we currently playing in a level?
-    bool isPlaying() const;
+    bool isPlaying() const { return logic.isPlaying(); };
     
     // are we currently showing the status screen?
-    bool isStatus() const { return !isPlaying(); }
+    bool isStatus() const { return logic.isStatus(); }
     
     // has the game ended?
-    bool isGameOver() const { return levelNumber == 0; }
+    bool isGameOver() const { return logic.isGameOver(); }
     
     // is this the very start of the playing time of the leve
-    bool isStartLevel() const;
+    bool isStartLevel() const { return logic.isStartLevel(); };
     
     // how much time is there left?
-    int secondsLeft() const;
+    int secondsLeft() const { return logic.secondsLeft(); };
     
     // what percent is left?
-    double percentLeft() const;
+    double percentLeft() const { return logic.percentLeft(); };
 
     // move the time counter by one frame
-    void operator++(int postfix);
+    void operator++(int postfix) { logic++; };
     
     // text
     std::string getText() const;
 
     // reset
-    void reset();
+    void reset() { logic.reset(); };
 
 private:
-    // number of frames left in this level
-    int framesLeft;
-    
-    // the level number we are currently in
-    int levelNumber;
-    
-    // length in seconds of each level
-    std::array<int, 5> levelLength;
-    
-    // seconds from frames
-    int secondsFromFrames(int frame) const
-    {
-        return frame / FRAMES_PER_SECOND;
-    }
-    
-    // how long have we been in the level in seconds?
-    int secondsInLevel() const
-    {
-        assert(levelNumber < (int)levelLength.size());
-        return levelLength[levelNumber] - secondsFromFrames(framesLeft);
-    }
+    // TimeLogic instance
+    TimeLogic logic;
     
 };
 

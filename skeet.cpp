@@ -6,6 +6,7 @@
 #include <string>
 #include <sstream>
 #include "skeet.h"
+#include "color_parser.h"
 using namespace std;
 
 
@@ -111,12 +112,15 @@ void Skeet::animate()
  * Fill in the background
  *  INPUT color   Background color
  *************************************************************************/
-void Skeet::drawBackground(double redBack, double greenBack, double blueBack) const
+void Skeet::drawBackground(std::string color) const
 {
+   ColorParser cp(color);
+   BackgroundColor bg = cp.parse();
+
    glBegin(GL_TRIANGLE_FAN);
 
    // two rectangles is the fastest way to fill the screen.
-   glColor3f((GLfloat)redBack /* red % */, (GLfloat)greenBack /* green % */, (GLfloat)blueBack /* blue % */);
+   glColor3f((GLfloat)bg.red /* red % */, (GLfloat)bg.green /* green % */, (GLfloat)bg.blue /* blue % */);
    glVertex2f((GLfloat)0.0, (GLfloat)0.0);
    glVertex2f((GLfloat)dimensions.getX(), (GLfloat)0.0);
    glVertex2f((GLfloat)dimensions.getX(), (GLfloat)dimensions.getY());
@@ -142,7 +146,11 @@ void Skeet::drawTimer(double percent,
    GLfloat half = length / (GLfloat)2.0;
 
    // do the background stuff
-   drawBackground(redBack, greenBack, blueBack);
+   BackgroundColor bg;
+   bg.red = redBack;
+   bg.green = greenBack;
+   bg.blue = blueBack;
+   drawBackground(bg.str());
 
    // foreground stuff
    radians = percent * M_PI * 2.0;
@@ -246,7 +254,11 @@ void drawText(const Point & topLeft, const string & text)
 void Skeet::drawLevel() const
 {
    // output the background
-   drawBackground(time.level() * .1, 0.0, 0.0);
+   BackgroundColor bg;
+   bg.red = time.level() * 0.1;
+   bg.green = 0.0;
+   bg.blue = 0.0;
+   drawBackground(bg.str());
    
    // output the gun
    gun.display();

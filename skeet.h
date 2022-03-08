@@ -45,7 +45,7 @@ public:
 private:
     // generate new birds
     void spawn();                  
-    void drawBackground(double redBack, double greenBack, double blueBack) const;
+    void drawBackground(const std::string color) const;
     void drawTimer(double percent,
                    double redFore, double greenFore, double blueFore,
                    double redBack, double greenBack, double blueBack) const;

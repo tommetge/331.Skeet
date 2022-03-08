@@ -106,6 +106,11 @@ void Skeet::animate()
          ++it;
 }
 
+void draw(DrawCommand& command)
+{
+   
+}
+
 /************************************************************************
  * DRAW Background
  * Fill in the background

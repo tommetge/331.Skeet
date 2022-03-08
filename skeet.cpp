@@ -106,6 +106,11 @@ void Skeet::animate()
          ++it;
 }
 
+void Skeet::draw(std::function<void (Skeet *)> func)
+{
+   
+}
+
 /************************************************************************
  * DRAW Background
  * Fill in the background

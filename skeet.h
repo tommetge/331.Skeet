@@ -18,6 +18,7 @@
 #include "time.h"
 #include "score.h"
 
+#include <functional>
 #include <list>
 
 /*************************************************************************
@@ -44,7 +45,8 @@ public:
     bool isPlaying() const { return time.isPlaying();  }
 private:
     // generate new birds
-    void spawn();                  
+    void spawn();
+    void draw(std::function<void (Skeet *)> func);
     void drawBackground(double redBack, double greenBack, double blueBack) const;
     void drawTimer(double percent,
                    double redFore, double greenFore, double blueFore,

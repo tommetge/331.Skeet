@@ -1,10 +1,10 @@
 /***********************************************************************
  * Header File:
- *    ScoreAdapter: Handles saving and loading the score
+ *    ScoreWebProvider: Simple web-backed storage for scores.
  * Author:
  *    Team 1
  * Summary:
- *    A file-backed, score saving monster.
+ *    A web-backed, score saving monster.
  ************************************************************************/
 
 
@@ -12,13 +12,9 @@
 
 #include "persisted_score.h"
 
-class ScoreAdapter
+class ScoreWebProvider
 {
 public:
    void store(PersistedScore &score);
    PersistedScore fetch();
-
-private:
-   ScoreProvider provider;
-   PersistedScore score;
 }

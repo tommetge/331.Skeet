@@ -1,10 +1,10 @@
 /***********************************************************************
  * Header File:
- *    ScoreProvider: Simple interface for score storage.
+ *    ScoreBridge: Handles saving and loading the score
  * Author:
  *    Team 1
  * Summary:
- *    An interface for all the score saving monsters.
+ *    A file-backed, score saving monster.
  ************************************************************************/
 
 
@@ -12,9 +12,13 @@
 
 #include "persisted_score.h"
 
-class ScoreProvider
+class ScoreBridge
 {
 public:
    void store(PersistedScore &score);
    PersistedScore fetch();
+
+private:
+   ScoreProvider provider;
+   PersistedScore score;
 }

@@ -12,13 +12,14 @@
 
 #include "persisted_score.h"
 
-class ScoreBridge
+class ScoreProxy
 {
 public:
    void store(PersistedScore &score);
    PersistedScore fetch();
 
 private:
-   ScoreProvider provider;
+   ScoreProvider webProvider;
+   ScoreProvider fileProvider;
    PersistedScore score;
 }
